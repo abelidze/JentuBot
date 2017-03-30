@@ -16,7 +16,7 @@ def signal_ctrl(signal, frame):
 	print("You pressed Ctrl+C!\nShutdown broadcasting...")
 	exit(0)
 
-def broadcasting(jobs):
+def broadcasting(jobs, ready):
 	#info("Broadcasting")
 	signal(SIGINT, signal_ctrl)
 	timer = 0
@@ -27,13 +27,29 @@ def broadcasting(jobs):
 		while not jobs.empty():
 			task = jobs.get()
 
-			if timer-task[0] >= 2:
-				if task[2][0][0] == 't':
-					bot.send_message(task[1], task[2][0][1])
+			if(timer-task[0] >= 2.0):
+				if(task[0] < 1.0):
+					answer_markup = telebot.types.ReplyKeyboardRemove()
+				else:
+					answer_markup = None
+
+				message = task[3][0]
+				del task[3][0]
 				task[0] = time.time()
-				del task[2][0]
-				if task[2]:
+
+				if task[3]:
 					temp_list.append(task)
+				elif task[4]:
+					answer_markup = telebot.types.ReplyKeyboardMarkup(True, True)
+					for edge in task[4]:
+						answer_markup.row(edge[2])
+
+				if(message[0] == 't'):
+					bot.send_message(task[1], message[1], reply_markup=answer_markup, disable_notification=True, parse_mode="Markdown")
+				elif(message[0] == 'i'):
+					bot.send_photo(task[1], message[1], reply_markup=answer_markup, disable_notification=True)
+
+				ready.put(task[2])
 				break
 			else:
 				temp_list.append(task)
@@ -41,18 +57,21 @@ def broadcasting(jobs):
 		for job in temp_list:
 			jobs.put(job)
 
-		time.sleep(0.025)
+		delta = 0.025 - time.time() + timer
+		if(delta > 0.0):
+			time.sleep(delta)
 
 
 #################
 ##  Main-only  ##
 #################
-if __name__ == '__main__':
+if(__name__ == '__main__'):
 
 	# Game Data
 	chapter1 = []
 	users = {}
 	tasks = Queue()
+	user_states = Queue()
 
 	# Loading Story
 	storyDB = sqlite3.connect('story.db')
@@ -70,18 +89,18 @@ if __name__ == '__main__':
 	usersEX.execute("SELECT * FROM users WHERE id != 0")
 	usersDB.commit()
 	for row in usersEX:
-		users[row[0]] = [row[1], row[2]]
+		users[row[0]] = [row[1], row[2], True]
 		print("User", row[0], "-----", users[row[0]])
 
 	# SQLite Functions
 	def new_user(message):
 		usersEX.execute("""
 			INSERT INTO users (id, save, archivement)
-			SELECT {0}, '{1}', '{2}' FROM users
+			SELECT {0}, {1}, '{2}' FROM users
 			WHERE NOT EXISTS (SELECT 1 FROM users WHERE id = {0} LIMIT 1)
 			LIMIT 1""".format(str(message.from_user.id), '0', '[]'))
 		usersDB.commit()
-		users[message.from_user.id] = ['0','[]']
+		users[message.from_user.id] = [0,'[]',True]
 		#users[row[0]] = [row[1], row[2]]
 	#usersEX.execute('CREATE TABLE users (id INTEGER NOT NULL PRIMARY KEY, save INTEGER NOT NULL, archivement TEXT)')
 
@@ -104,13 +123,15 @@ bot = telebot.TeleBot(settings.drink(settings.vodka))
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
 	new_user(message)
-	tasks.put([time.time()-3, message.chat.id, chapter1[0][2]])
+	users[message.from_user.id][2] = False
+	tasks.put([0.0, message.chat.id, message.from_user.id, chapter1[0][2], chapter1[0][1]])
 	log("START", message)
 
 # Stop
 @bot.message_handler(commands=['stop'])
 def send_wtf(message):
-	bot.reply_to(message, "WTF?! NO!")
+	stop_markup = telebot.types.ReplyKeyboardRemove()
+	bot.reply_to(message, "WTF?! NO!", reply_markup=stop_markup)
 	log("STOP", message)
 
 # Parsing Text
@@ -119,17 +140,41 @@ def send_answer(message):
 	if(message.text == "kekos"):
 		bot.reply_to(message, "privetos")
 		if(message.from_user.id in users):
-			bot.send_message(message.chat.id, "Oh, i know who are you!")
+			bot.send_message(message.chat.id, "Oh, I know who are you!")
 	else:
-		bot.send_message(message.chat.id, json.dumps(chapter1[randint(0,2)]))
+		user_id = message.from_user.id
+		answer_id = message.chat.id
+		okay = False
+
+		if(not users[user_id][2]):
+			while not user_states.empty():
+				user_id = user_states.get()
+				users[user_id][2] = True
+				if(user_id == message.from_user.id):
+					okay = True
+					break
+		else:
+			okay = True
+
+		if(okay):
+			wrong = True
+			for edge in chapter1[users[user_id][0]][1]:
+				if(message.text == edge[2]):
+					users[user_id][0] = edge[0]
+					users[user_id][2] = False
+					wrong = False
+					tasks.put([0.0, answer_id, user_id, chapter1[edge[0]][2], chapter1[edge[0]][1]])
+					break
+			if(wrong):
+				bot.send_message(answer_id, "Хм.. что-то пошло не так!")
 	log("TEXT", message)
 
 
 ################
 ##    MAIN    ##
 ################
-if __name__ == '__main__':
-	broad = Process(target=broadcasting, args=(tasks,))
+if(__name__ == '__main__'):
+	broad = Process(target=broadcasting, args=(tasks, user_states))
 	broad.start()
 	print("JentuBot started! <-> ['Ctrl+C' to shutdown]")
 	bot.polling(none_stop=True, interval=0)
