@@ -68,38 +68,38 @@ def broadcasting(jobs, ready):
 if(__name__ == '__main__'):
 
 	# Game Data
-	chapter1 = []
+	story = []
 	users = {}
 	tasks = Queue()
 	user_states = Queue()
 
+	# Connect SQLite
+	dataDB = sqlite3.connect('data.db', check_same_thread=False)
+	dataEX = dataDB.cursor()
+
 	# Loading Story
-	storyDB = sqlite3.connect('story.db')
-	storyEX = storyDB.cursor()
-	storyEX.execute("SELECT * FROM chapter1 ORDER BY id")
-	storyDB.commit()
-	for row in storyEX:
-		chapter1.append(json.loads(row[1]))
-	storyDB.close()
-	#print(chapter1[0][1][1][2])
+	dataEX.execute("SELECT * FROM answer ORDER BY id")
+	dataDB.commit()
+	for row in dataEX:
+		story.append(json.loads(row[1]))
+	#print(story[0][1][1][2])
 
 	# Loading Users
-	usersDB = sqlite3.connect('users.db', check_same_thread=False)
-	usersEX = usersDB.cursor()
-	usersEX.execute("SELECT * FROM users WHERE id != 0")
-	usersDB.commit()
-	for row in usersEX:
+	dataEX.execute("SELECT * FROM users WHERE id != 0")
+	dataDB.commit()
+	print("USERS:")
+	for row in dataEX:
 		users[row[0]] = [row[1], row[2], True]
-		print("User", row[0], "-----", users[row[0]])
+		print("-> user", row[0], "-----", users[row[0]])
 
 	# SQLite Functions
 	def new_user(message):
-		usersEX.execute("""
+		dataEX.execute("""
 			INSERT INTO users (id, save, archivement)
 			SELECT {0}, {1}, '{2}' FROM users
 			WHERE NOT EXISTS (SELECT 1 FROM users WHERE id = {0} LIMIT 1)
 			LIMIT 1""".format(str(message.from_user.id), '0', '[]'))
-		usersDB.commit()
+		dataDB.commit()
 		users[message.from_user.id] = [0,'[]',True]
 		#users[row[0]] = [row[1], row[2]]
 	#usersEX.execute('CREATE TABLE users (id INTEGER NOT NULL PRIMARY KEY, save INTEGER NOT NULL, archivement TEXT)')
@@ -124,7 +124,7 @@ bot = telebot.TeleBot(settings.drink(settings.vodka))
 def send_welcome(message):
 	new_user(message)
 	users[message.from_user.id][2] = False
-	tasks.put([0.0, message.chat.id, message.from_user.id, chapter1[0][2], chapter1[0][1]])
+	tasks.put([0.0, message.chat.id, message.from_user.id, story[0][2], story[0][1]])
 	log("START", message)
 
 # Stop
@@ -158,12 +158,12 @@ def send_answer(message):
 
 		if(okay):
 			wrong = True
-			for edge in chapter1[users[user_id][0]][1]:
+			for edge in story[users[user_id][0]][1]:
 				if(message.text == edge[2]):
 					users[user_id][0] = edge[0]
 					users[user_id][2] = False
 					wrong = False
-					tasks.put([0.0, answer_id, user_id, chapter1[edge[0]][2], chapter1[edge[0]][1]])
+					tasks.put([0.0, answer_id, user_id, story[edge[0]][2], story[edge[0]][1]])
 					break
 			if(wrong):
 				bot.send_message(answer_id, "Хм.. что-то пошло не так!")
