@@ -1,0 +1,11 @@
+__pycache__/
+log/
+dev/
+*.log
+*.pyc
+*.db
+bottoken.py
+.htaccess
+
+# But
+!archive/**/*

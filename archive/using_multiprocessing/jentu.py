@@ -2,7 +2,7 @@
 from multiprocessing import Process, Queue
 from signal import signal, SIGINT
 from random import randint
-import settings
+from settings import *
 import telebot
 import sqlite3
 import json
@@ -65,7 +65,7 @@ def broadcasting(jobs, ready):
 #################
 ##  Main-only  ##
 #################
-if(__name__ == '__main__'):
+if __name__ == '__main__':
 
 	# Game Data
 	story = []
@@ -117,7 +117,7 @@ if(__name__ == '__main__'):
 #################
 
 # Initialize TeleBot
-bot = telebot.TeleBot(settings.drink(settings.vodka))
+bot = telebot.TeleBot(drink(vodka))
 
 # Start session
 @bot.message_handler(commands=['start'])
@@ -173,7 +173,7 @@ def send_answer(message):
 ################
 ##    MAIN    ##
 ################
-if(__name__ == '__main__'):
+if __name__ == '__main__':
 	broad = Process(target=broadcasting, args=(tasks, user_states))
 	broad.start()
 	print("JentuBot started! <-> ['Ctrl+C' to shutdown]")
