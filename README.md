@@ -7,6 +7,7 @@ About JentuBot
 ==============
 
 Arios Jentu (also named JentuBot) is an interactive fiction game from Star Wars about invented by fans character 'Arios Jentu'.
+
 Game is written as Telegram Messenger Bot with using of its API, Python3 language and different libraries for it that are listed below.
 
 Installation
@@ -37,7 +38,7 @@ After installing you shall see the following files and directories:
 	
 Requirements
 ------------
-***
+
 > **Utils and programs:**
 * [Python3](https://www.python.org/download/releases/3.0)
 * [Redis](https://redis.io) (for Windows: [link](https://github.com/dmajkic/redis/downloads))
@@ -45,7 +46,7 @@ Requirements
 * [PHP5+](https://secure.php.net/downloads.php) (used by [Adminer](https://www.adminer.org) to manage database)
 * [Screen](https://www.gnu.org/software/screen) (only if you want to run bot through 'startbot.sh' on Linux)
 
----
+
 > **Python:**
 * [pyTelegramBotAPI](https://github.com/eternnoir/pyTelegramBotAPI)
 * [PeeWee](https://github.com/coleifer/peewee)
@@ -64,19 +65,21 @@ or
 $ pip install -r /path/to/JentuBot/requirements/requirements.txt
 ```
 
----
+
 > **Used ports:**
 * Redis -> 8060
 * CherryPy -> 443
 * PHP(for Adminer) -> 80
+
 ***Note:*** *you can change it for yourself through related configs*
 
 Configuring
 -----------
-***
+
 > **JentuBot settings**
 
 **[bottoken.py]**
+
 As Telegram Bot API uses tokens for detecting bots you'll to add it to your configuration.
 For this JentuBot is using a file 'bottoken.py' and function `de_token()` from 'functions.py'.
 You can write your own function for encrypting / decrypting your token or just use it directly - choice is yours.
@@ -86,10 +89,12 @@ token = "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
 ```
 
 **[settings.py]**
+
 All JentuBot settings are placed in a single file 'settings.py'.
 From this file you can configure all main bot's constants.
 
 **[database.py]**
+
 Because `jentu.db` isn't distributed with JentuBot you need to configure `WEBSERVER_DB` constant from `settings.py` and just run `database.py` once:
 ```sh
 python database.py
@@ -97,6 +102,7 @@ python database.py
 It will generate an empty "ready-to-work" SQLite database file.
 
 **[redis.conf]**
+
 This is an optional Redis settings file which is placed in './config/' directory.
 
 ```
@@ -108,7 +114,7 @@ dir "/path/to/Redis/data"
 logfile "/path/to/Redis/logs/redis.log"
 ```
 
-***
+
 > **SSL certificate generation**
 
 If you want to generate self-signed certificate for using a webhooh, you need to `install openssl` and use it in this way:
@@ -125,7 +131,7 @@ $ openssl req -new -x509 -days 3650 -key application_key.pem -out application_ce
 
 Running
 -------
-***
+
 > **MANUAL**
 
 To get bot working you'll need to:
@@ -151,13 +157,14 @@ To get bot working you'll need to:
 	php -S 127.0.0.1:80
 	```
 **Note:**
-	1. *on some Linux systems some commands (such as starting php server or main.py) need `sudo` for successfull running.*
-	2. *use `screen`, `tmux`, `jobs` or similar utils on Linux if you want to start all your bot's services from the same terminal.*
+1. *on some Linux systems some commands (such as starting php server or main.py) need `sudo` for successfull running.*
+2. *use `screen`, `tmux`, `jobs` or similar utils on Linux if you want to start all your bot's services from the same terminal.*
 
-***
+
 > **AUTOMATIC**
 
 Instead of manual launching you can use our scripts `./startbot.sh` on Linux and `startbot.bat` on Windows.
+
 *Note that to get them working on Linux you need to install `screen` and edit your python path `/usr/local/bin/python3` from `./loopbot.sh`.*
 
 Contact
@@ -166,7 +173,9 @@ Contact
 **"Arios Jentu"** official bot in Telegram: [@JentuBot](https://telegram.me/JentuBot)
 
 Developers on Telegram:
+
 [![https://telegram.me/Abelidze](https://img.shields.io/badge/%E2%9E%A4Telegram-@Abelidze-DD2200.svg?style=flat-square&&colorA=2D233B)](https://telegram.me/Abelidze)
+
 [![https://telegram.me/AriosJentu](https://img.shields.io/badge/%E2%9E%A4Telegram-@AriosJentu-534370.svg?style=flat-square&&colorA=2D233B)](https://telegram.me/AriosJentu)
 
 P.S> Unfinished section
