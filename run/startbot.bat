@@ -12,7 +12,7 @@ echo Redis started!
 start "Celery" cmd /k "title 'Celery' && celery worker -A tasks --loglevel=info"
 sleep 2
 echo Celery started!
-start "JentuPHP" cmd /k "title 'JentuPHP' && cd jentudb && php -S 127.0.0.1:80"
+start "JentuPHP" cmd /k "title 'JentuPHP' && cd jentudb && php -S 0.0.0.0:80 router.php"
 sleep 1
 echo JentuPHP started!
 sleep 1

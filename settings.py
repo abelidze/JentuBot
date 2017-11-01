@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
 import os
 import telebot
-from functions import de_token
+from datetime import datetime
+from functions import de_token, load_json
 from bottoken import token
 
 # Yeah, it is here <-- cycle import
 jentuBot = telebot.TeleBot(de_token(token))
+
+LANG = {
+	'ru': load_json('resource/lang_ru.json'),
+	'en': load_json('resource/lang_en.json')
+}
+
+MENU_BACKGROUND = 'AgADAgAD-qcxG4ubCUgtzX4a0tfqacBHtw0ABOMmpz4YV8jep50CAAEC'
 
 CURRENT_PATH = os.path.abspath(os.path.dirname(__file__)).replace('\\', '/')
 
@@ -22,7 +30,7 @@ WEBHOOK_URL_PATH = "/%s/" % (de_token(token))
 WEBSERVER_HOST 	 = '127.0.0.1'
 WEBSERVER_PORT 	 = 80
 WEBSERVER_URL 	 = "http://%s:%s" % (WEBSERVER_HOST, WEBSERVER_PORT)
-WEBSERVER_DB	 = './jentudb/jentu.db'
+WEBSERVER_DB	 = './jentudb/jendb/jentu.db'
 
 WEBHOOK_CONFIG = {
 	'/':
