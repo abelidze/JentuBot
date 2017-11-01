@@ -46,7 +46,7 @@ Requirements
 * [PHP5+](https://secure.php.net/downloads.php) (used by [Adminer](https://www.adminer.org) to manage database)
 * [Screen](https://www.gnu.org/software/screen) (only if you want to run bot through 'startbot.sh' on Linux)
 
-
+***
 > **Python:**
 * [pyTelegramBotAPI](https://github.com/eternnoir/pyTelegramBotAPI)
 * [PeeWee](https://github.com/coleifer/peewee)
@@ -65,7 +65,7 @@ or
 $ pip install -r /path/to/JentuBot/requirements/requirements.txt
 ```
 
-
+***
 > **Used ports:**
 * Redis -> 8060
 * CherryPy -> 443
@@ -80,8 +80,8 @@ Configuring
 
 **[bottoken.py]**
 
-As Telegram Bot API uses tokens for detecting bots you'll to add it to your configuration.
-For this JentuBot is using a file 'bottoken.py' and function `de_token()` from 'functions.py'.
+As Telegram Bot API uses tokens for detecting bots you'll need to add it to your configuration.  
+For this JentuBot is using a file 'bottoken.py' and function `de_token()` from 'functions.py'.  
 You can write your own function for encrypting / decrypting your token or just use it directly - choice is yours.
 ```python
 # Example of bottoken.py file. Place your encrypted / decrypted token here:
@@ -114,7 +114,7 @@ dir "/path/to/Redis/data"
 logfile "/path/to/Redis/logs/redis.log"
 ```
 
-
+***
 > **SSL certificate generation**
 
 If you want to generate self-signed certificate for using a webhooh, you need to `install openssl` and use it in this way:
@@ -160,7 +160,7 @@ To get bot working you'll need to:
 1. *on some Linux systems some commands (such as starting php server or main.py) need `sudo` for successfull running.*
 2. *use `screen`, `tmux`, `jobs` or similar utils on Linux if you want to start all your bot's services from the same terminal.*
 
-
+***
 > **AUTOMATIC**
 
 Instead of manual launching you can use our scripts `./startbot.sh` on Linux and `startbot.bat` on Windows.
