@@ -1,30 +1,32 @@
 <?php
-	function adminer_object() {
-		class AdminerSoftware extends Adminer {
-			
-			function name() {
-				return 'JentuDB';
+	echo "
+	<html>
+	<head>
+		<title>JentuBot</title>
+		<style>
+			body {
+				background: #312F42;
+				margin: 0;
 			}
-			
-			function login($login, $password) {
-				return ($login == 'arios' && $password == 'jentu');
+			img {
+				padding: 0;
+				margin: 0;
 			}
-			
-			function loginForm() {
-				echo '<table cellspacing="0">
-				<tr><th>' . lang("Username") . '</th> <td><input name="auth[username]" id="username" autocapitalize="off"/></td> </tr>
-				<tr><th>' . lang('Password') . '</th> <td><input name="auth[password]" type="password" /></td> </tr>
-				</table>
-				<script type="text/javascript">
-					focus(document.getElementById("username"));
-				</script>
-				';
-				echo '<p><input type="submit" value="' . lang('Login') . '" /></p>';
-				echo '<input name="auth[driver]" type="hidden" value="sqlite" />';
-				echo '<input name="auth[db]" type="hidden" value="jentu.db" />';
+			p {
+				padding: 0;
+				margin: 0;
+				color: white;
+				font: 52pt sans-serif;
+				font-family: Impact;
 			}
-		}
-		return new AdminerSoftware;
-	}
-	include "./adminer/include.php";
+		</style>
+	</head>
+	<body>
+		<center>
+			<img src='logo.png'>
+			<p>Arios Jentu: Interactive fiction game</p>
+		</center>
+	</body>
+	</html>
+	";
 ?>
