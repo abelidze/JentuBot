@@ -1,12 +1,7 @@
 __pycache__/
 log/
 dev/
-jentudb/
 *.log
 *.pyc
-*.db
 bottoken.py
 .htaccess
-
-# But
-!archive/**/*

@@ -11,3 +11,14 @@ def drink(message):
 	return message
 
 vodka = "..."
+
+#def to_hex(s):
+#	strs = ""
+#	for i in range(len(s)):
+#		strs += "%x"%(ord(s[i]))
+#	return strs
+
+#def rot(message):
+#	for i, v in enumerate(message):
+#		message = message[:i] + chr(ord(v)-12) + message[i+1:]
+#	return to_hex(message)
